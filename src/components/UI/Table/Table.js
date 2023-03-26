@@ -30,7 +30,9 @@ const Styles = styled.div`
 `
 
 
-function Table({ columns, data }) {
+function Table({ columns, data, formatRowProps }) {
+
+
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable(
       {
@@ -73,7 +75,7 @@ function Table({ columns, data }) {
           {firstPageRows.map((row, i) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps(formatRowProps && formatRowProps(row))}>
                 {row.cells.map((cell) => {
                   return (
                     <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
@@ -91,16 +93,5 @@ function Table({ columns, data }) {
   );
 }
 
-// function App() {
-  
-
-//   const data = React.useMemo(() => makeData(2000), []);
-
-//   return (
-//     <Styles>
-//       <Table columns={columns} data={data} />
-//     </Styles>
-//   );
-// }
 
 export default Table;

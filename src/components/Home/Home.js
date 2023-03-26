@@ -4,30 +4,37 @@ import { useTable, useSortBy } from "react-table";
 import Card from "../UI/Card/Card";
 import Table from "../UI/Table/Table";
 import TableContent from "../UI/Table-old/TableContent";
+import Modal from "../UI/Modal/Modal";
 import Upload from "../Upload/Upload";
+import Details from "../Details/Details";
 import classes from "./Home.module.css";
 
 const Home = (props) => {
   const [bcfProject, setbcfProject] = useState("");
   const [bcfInfo, setbcfInfo] = useState([]);
+  const [bcfComments, sebcfComments] = useState([]);
+  const [bcfTopics, setbcfTopics] = useState([]);
+  const [showDetails, setshowDetails] = useState(false);
+  const [bcfDetails, setbcfDetails] = useState("");
+  const [filePath, setfilePath] = useState("");
   const img = new Image();
-          
 
-  const addBCFHandler = (bcfData) => {
+  const addBCFHandler = (bcfData, bcfComme) => {
     setbcfInfo(bcfData);
-    
+    setbcfTopics(bcfComme);
   };
 
   const addProjectHandler = (bcfTitle) => {
     setbcfProject(bcfTitle);
   };
 
- 
+  const addFilePath = (path) => {
+    setfilePath(path);
+  };
 
   useEffect(() => {
 
-    
-  }, [bcfProject, bcfInfo]);
+  }, [bcfProject, bcfInfo, bcfComments]);
 
   const columns = React.useMemo(
     () => [
@@ -71,38 +78,54 @@ const Home = (props) => {
     []
   );
 
+  function hideModalHandler() {
+    setshowDetails(false);
+  }
+  const formatTrProps = (state = {}) => {
+    //
+    return {
+      onClick: () => {
+        setshowDetails(true);
+        var guid2 = state.original.guid;
+
+        function checkGuid(top) {
+          if (top.topic.guid === guid2) {
+            return top;
+          }
+        }
+      
+        var topicComments= bcfTopics.filter(checkGuid);
+        topicComments = topicComments[0].comments;
+
+        sebcfComments(topicComments);
+        setbcfDetails(guid2);
+      },
+    };
+  };
 
   return (
     <>
+      {showDetails && (
+        <Modal onClose={hideModalHandler}>
+          <Details guid={bcfDetails} comments={bcfComments} file={filePath} />
+        </Modal>
+      )}
+
+
       <h1>
         Select your BCF file:
-        <Upload onAddProject={addProjectHandler} onAddBCF={addBCFHandler} />
+        <Upload onAddProject={addProjectHandler} onAddBCF={addBCFHandler} onAddFile={addFilePath} />
       </h1>
       {/* <Card className={classes.home}> */}
-        <h1>Project name: {bcfProject}</h1>
+      <h1>Project name: {bcfProject}</h1>
 
-        {bcfInfo.length !== 0 &&  <Table columns={columns} data={bcfInfo} />}
-       
-
-        {/* {bcfInfo.map((bcf) => (
-          <Card key={bcf.index} className={classes.home}>
-           <h1>{bcf.title}</h1> 
-            
-              <Table> 
-              <TableContent title="priority:" value={bcf.priority} />
-              <TableContent title="status:" value={bcf.topic_status} />
-              <TableContent title="CreationAuthor:" value={bcf.creation_author} />
-              <TableContent title="CreationDate:" value={bcf.creation_date} />
-              <TableContent title="ModifiedAuthor:" value={bcf.modified_author} />
-              <TableContent title="ModifiedDate:" value={bcf.modified_date} />
-              <TableContent title="AssignedTo:" value={bcf.assigned_to} />          
-              <TableContent title="DueDate:" value={bcf.due_date} />    
-              <TableContent title="description:" value={bcf.description} /> 
-              </Table>
-
-          </Card>
-        ))} */}
-      {/* </Card> */}
+      {bcfInfo.length !== 0 && (
+        <Table
+          columns={columns}
+          data={bcfInfo}
+          formatRowProps={(state) => formatTrProps(state)}
+        />
+      )}
     </>
   );
 };
