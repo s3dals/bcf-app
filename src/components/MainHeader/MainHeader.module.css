@@ -9,8 +9,10 @@
   align-items: center;
   background: #741188;
   padding: 0 2rem;
+
 }
 
 .main-header h1 {
+  text-decoration: none;
   color: white;
 }

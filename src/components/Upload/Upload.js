@@ -10,23 +10,13 @@ const Upload = (props) => {
   const getBCF = async (file) => {
     const reader = new BcfReader();
 
-    // const img = new Image();
-    // img.src = URL.createObjectURL(reader.getViewpointSnapshot);
-    // document.body.prepend(img);
 
     await reader.read(file);
 
     // console.log(reader.bcf_archive.entries);
     console.log(reader.topics);
     
-    // var pic = await reader.topics[1].getViewpointSnapshot();
 
-    // const promise = pic.async("blob").then((blob) => {
-    //   const img = new Image();
-    //   img.src = URL.createObjectURL(blob);
-    //   document.body.prepend(img);
-
-    // });
 
     reader.topics.forEach((topic) => {
       bcfData.push(topic.markup.topic);
@@ -38,26 +28,6 @@ const Upload = (props) => {
     
   };
 
-  // const extractZip = async (file) => {
-  //   const zip = new JSZip();
-  //   const extractedFiles = await zip.loadAsync(file);
-
-  //   const promises = [];
-
-  //   extractedFiles.forEach(async (relativePath, file) => {
-  //     var splitSTR = relativePath.split("/");
-
-  //     if (splitSTR[1] === "snapshot.png") {
-  //       const promise = file.async("blob").then((blob) => {
-  //         const img = new Image();
-  //         img.src = URL.createObjectURL(blob);
-  //         document.body.prepend(img);
-  //       });
-  //       promises.push(promise);
-  //     }
-  //   });
-  //   await Promise.all(promises);
-  // };
 
   async function readBCF(target) {
     getBCF(target);

@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useTable, useSortBy } from "react-table";
 
-import Card from "../UI/Card/Card";
 import Table from "../UI/Table/Table";
-import TableContent from "../UI/Table-old/TableContent";
 import Modal from "../UI/Modal/Modal";
 import Upload from "../Upload/Upload";
 import Details from "../Details/Details";
@@ -11,13 +8,15 @@ import classes from "./Home.module.css";
 
 const Home = (props) => {
   const [bcfProject, setbcfProject] = useState("");
+  
   const [bcfInfo, setbcfInfo] = useState([]);
   const [bcfComments, sebcfComments] = useState([]);
   const [bcfTopics, setbcfTopics] = useState([]);
+
   const [showDetails, setshowDetails] = useState(false);
   const [bcfDetails, setbcfDetails] = useState("");
   const [filePath, setfilePath] = useState("");
-  const img = new Image();
+
 
   const addBCFHandler = (bcfData, bcfComme) => {
     setbcfInfo(bcfData);
@@ -33,7 +32,7 @@ const Home = (props) => {
   };
 
   useEffect(() => {
-
+  
   }, [bcfProject, bcfInfo, bcfComments]);
 
   const columns = React.useMemo(
@@ -111,13 +110,14 @@ const Home = (props) => {
         </Modal>
       )}
 
-
+      {bcfInfo.length === 0 && (
       <h1>
         Select your BCF file:
         <Upload onAddProject={addProjectHandler} onAddBCF={addBCFHandler} onAddFile={addFilePath} />
       </h1>
+      )}
       {/* <Card className={classes.home}> */}
-      <h1>Project name: {bcfProject}</h1>
+      {/* <h1>Project name: {bcfProject}</h1> */}
 
       {bcfInfo.length !== 0 && (
         <Table

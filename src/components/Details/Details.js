@@ -30,18 +30,19 @@ const Details = (props, id) => {
   return (
     <header className={classes.details}>
       <img src={bcfimg} alt="viewpoint" width={500} />
-      <h1>Comments:</h1>
-
+      <h2>Comments:</h2>
+      <hr />
       {props.comments.length > 0 &&
         props.comments.map((post) => (
-          <p key={post.guid}>
-            <li>Author: {post.author} </li>
+          <div key={post.guid}>
             <li>Comment: {post.comment} </li>
+            <li>Author: {post.author} </li>
             <li>Date: {post.date} </li>
             <li>modified author: {post.modified_author} </li>
             <li>modified date: {post.modified_date} </li>
             <li>viewpoint: {post.viewpoint} </li>
-          </p>
+            <hr />
+          </div>
         ))}
       {/* {!props.comments && <h1>No comments!</h1>} */}
     </header>
