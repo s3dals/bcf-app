@@ -13,7 +13,7 @@ const Navigation = (props) => {
           <a href="/">Admin</a>
         </li>
         <li>
-          <button onClick={props.onLogout}>Logout</button>
+          <button >Logout</button>
         </li>
       </ul>
     </nav>

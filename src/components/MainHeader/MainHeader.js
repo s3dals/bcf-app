@@ -6,8 +6,9 @@ import classes from './MainHeader.module.css';
 const MainHeader = (props) => {
   return (
     <header className={classes['main-header']}>
-      <h1>BCF Editor</h1>
-      <Navigation isLoggedIn={props.isAuthenticated} onLogout={props.onLogout} />
+      <a href="/"><h1>BCF Editor </h1></a>
+      
+      <Navigation  />
     </header>
   );
 };

@@ -44,7 +44,7 @@ function Table({ columns, data, formatRowProps }) {
 
   // We don't want to render all 2000 rows for this example, so cap
   // it at 20 for this use case
-  const firstPageRows = rows.slice(0, 20);
+  const firstPageRows = rows.slice(0, 40);
 
   return (
     <>
@@ -87,7 +87,7 @@ function Table({ columns, data, formatRowProps }) {
         </tbody>
       </table>
       <br />
-      <div>Showing the first 20 results of {rows.length} rows</div>
+      {/* <div>Showing the first 20 results of {rows.length} rows</div> */}
       </Styles>
     </>
   );
