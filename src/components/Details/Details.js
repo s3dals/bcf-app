@@ -32,7 +32,7 @@ const Details = (props, id) => {
       <img src={bcfimg} alt="viewpoint" width={500} />
       <h2>Comments:</h2>
       <hr />
-      {props.comments.length > 0 &&
+      {props.comments && props.comments.length > 0 &&
         props.comments.map((post) => (
           <div key={post.guid}>
             <li>Comment: {post.comment} </li>
@@ -44,7 +44,7 @@ const Details = (props, id) => {
             <hr />
           </div>
         ))}
-      {/* {!props.comments && <h1>No comments!</h1>} */}
+      {!props.comments && <h3>No comments!</h3>}
     </header>
   );
 };

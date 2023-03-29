@@ -1,6 +1,8 @@
 import React from "react";
-import styled from 'styled-components'
+import styled from "styled-components";
 import { useTable, useSortBy } from "react-table";
+
+import classes from "./Table.module.css";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -10,14 +12,17 @@ const Styles = styled.div`
     align: center;
     
     tr {
+      
       :last-child {
         td {
+          
           border-bottom: 0;
         }
       }
     }
     th,
     td {
+      cursor: pointer;
       margin: 0;
       padding: 0.5rem;
       border-bottom: 1px solid black;
@@ -26,13 +31,12 @@ const Styles = styled.div`
         border-right: 0;
       }
     }
-  }
-`
 
+
+  }
+`;
 
 function Table({ columns, data, formatRowProps }) {
-
-
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable(
       {
@@ -48,50 +52,49 @@ function Table({ columns, data, formatRowProps }) {
 
   return (
     <>
-     <Styles>
-      <table {...getTableProps()} align="center" >
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                // Add the sorting props to control sorting. For this example
-                // we can add them into the header props
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render("Header")}
-                  {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? " 🔽"
-                        : " 🔼"
-                      : ""}
-                  </span>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {firstPageRows.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps(formatRowProps && formatRowProps(row))}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  );
-                })}
+      <Styles>
+        <table {...getTableProps()} align="center">
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  // Add the sorting props to control sorting. For this example
+                  // we can add them into the header props
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Header")}
+                    {/* Add a sort direction indicator */}
+                    <span>
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? " 🔽"
+                          : " 🔼"
+                        : ""}
+                    </span>
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <br />
-      {/* <div>Showing the first 20 results of {rows.length} rows</div> */}
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {firstPageRows.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps(formatRowProps && formatRowProps(row))}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <br />
+        {/* <div>Showing the first 20 results of {rows.length} rows</div> */}
       </Styles>
     </>
   );
 }
-
 
 export default Table;
