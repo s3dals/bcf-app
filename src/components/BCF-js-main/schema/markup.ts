@@ -19,9 +19,9 @@ export interface IHeaderFile {
 }
 
 export interface ITopic {
-    guid: string,
-    topic_type: string,
-    topic_status: string,
+    topic_guid: string,
+    topic_Topictype: string,
+    topic_Topicstatus: string,
     reference_link?: string[],
     title: string,
     priority?: string,

@@ -26,9 +26,9 @@ export namespace Helpers {
 
         return {
             topic: {
-                guid: Markup.Topic['@_Guid'],
-                topic_type: Markup.Topic["@_TopicType"],
-                topic_status: Markup.Topic["@_TopicStatus"],
+                topic_guid: Markup.Topic['@_Guid'],
+                topic_Topictype: Markup.Topic["@_TopicType"],
+                topic_Topicstatus: Markup.Topic["@_TopicStatus"],
                 reference_link: Markup.Topic["ReferenceLink"] && Helpers.ObjectToArray(Markup.Topic["ReferenceLink"]),
                 title: Markup.Topic["Title"],
                 priority: Markup.Topic["Priority"],

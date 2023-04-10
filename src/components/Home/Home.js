@@ -4,6 +4,7 @@ import Table from "../UI/Table/Table";
 import Modal from "../UI/Modal/Modal";
 import Upload from "../Upload/Upload";
 import Details from "../Details/Details";
+import Export from "../Export/Export";
 import classes from "./Home.module.css";
 
 const Home = (props) => {
@@ -46,8 +47,8 @@ const Home = (props) => {
         accessor: "priority",
       },
       {
-        Header: "topic_status",
-        accessor: "topic_status",
+        Header: "topic_Topicstatus",
+        accessor: "topic_Topicstatus",
       },
       {
         Header: "creation_date",
@@ -85,10 +86,10 @@ const Home = (props) => {
     return {
       onClick: () => {
         setshowDetails(true);
-        var guid2 = state.original.guid;
+        var guid2 = state.original.topic_guid;
 
         function checkGuid(top) {
-          if (top.topic.guid === guid2) {
+          if (top.topic.topic_guid === guid2) {
             return top;
           }
         }
@@ -118,7 +119,7 @@ const Home = (props) => {
       )}
       {/* <Card className={classes.home}> */}
       {/* <h1>Project name: {bcfProject}</h1> */}
-
+      <Export data={bcfInfo} comments={bcfTopics} />
       {bcfInfo.length !== 0 && (
         <Table
           columns={columns}

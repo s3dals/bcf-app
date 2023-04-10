@@ -72,7 +72,7 @@ export class Topic {
 
             for (let i = 0; i < viewpoints.length; i++) {
                 const entry = viewpoints[i];
-                const key = this.markup.topic.guid + "/" + entry.viewpoint;
+                const key = this.markup.topic.topic_guid + "/" + entry.viewpoint;
                 const file = this.reader.getEntry(key);
 
                 if (!file) throw new Error("Missing Visualization Info");
@@ -84,9 +84,9 @@ export class Topic {
         }
     }
 
-    getViewpointSnapshot = async (viewpoint: MarkupViewpoint) : Promise<Blob | undefined> => {
+    getViewpointSnapshot = async (viewpoint: MarkupViewpoint) => {
         if(!viewpoint || !this.markup) return;
-        const entry = this.reader.getEntry(`${this.markup.topic.guid}/${viewpoint.snapshot}`);
+        const entry = this.reader.getEntry(`${this.markup.topic.topic_guid}/${viewpoint.snapshot}`);
         if(entry){
             return await entry.blob()
         }
