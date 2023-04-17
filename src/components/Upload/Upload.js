@@ -1,54 +1,105 @@
 // import { BcfReader } from "@parametricos/bcf-js";
-import { BcfReader } from "../BCF-js-main/BcfReader.ts";
-import classes from "./Upload.module.css";
+import React, { useContext } from "react";
 import JSZip from "jszip";
+import parser from "fast-xml-parser";
+
+import classes from "./Upload.module.css";
+
+import BCFcontext from '../../store/bcf-data';
+
+
+const xmlParserOptions = {
+  ignoreAttributes: false,
+  attributeNamePrefix: "@_",
+  attributesGroupName: "@_",
+  // textNodeName: "#text",
+  ignoreNameSpace: true,
+  allowBooleanAttributes: true,
+  parseNodeValue: true,
+  parseAttributeValue: true,
+  trimValues: true,
+  // transformAttributeName: (attributeName) => attributeName.toLowerCase(),
+};
+var data = [];
 var bcfData = [];
-var bcfComments = [];
-var bcfSnap = [];
-
+var bcfMarkup = [];
 const Upload = (props) => {
+
+  const bcfctx = useContext(BCFcontext);
+  const zip = new JSZip();
+
   const getBCF = async (file) => {
-    const reader = new BcfReader();
 
+    const extractedFiles = await zip.loadAsync(file);
 
-    await reader.read(file);
+    extractedFiles.forEach(async (relativePath, file) => {
+      const content = await file.async("string");
+      var splitSTR = relativePath.split("/");
 
-    // console.log(reader.bcf_archive.entries);
-    console.log(reader);
+      // if (relativePath === "project.bcfp") {
+      // console.log("Project Name:");
+      // bcfTitle = getTag(content, "Name", "value");
+      // props.onAddProject(bcfTitle);
+      // }
 
-    // for (const [name, entry] of Object.entries(reader.bcf_archive.entries)) {
-    //   if (name.endsWith('.png')) {
-    //     console.log([entry.nameBytes]);
-    //     var data = new Uint8Array(entry.nameBytes),
-    //     base64Data = btoa(String.fromCharCode.apply(null, data));
-    //     var blob = new Blob(data, { type: "image/png" });
-    //     const img = new Image();
-    //     img.src =  URL.createObjectURL(blob);
-    //     // 'data:image/png;base64,' + base64Data;
-    //     //  URL.createObjectURL(blob);
-    //     console.log(img);
-    //     console.log("data length: " + data.length);
-    //     document.body.appendChild(img);
-    //     // img { width: 100px; height: 100px; image - rendering: pixelated; }
-    //   };
-    // };
+      // console.log(relativePath);
+      if (splitSTR[1] === "snapshot.png") {
 
-    reader.topics.forEach((topic) => {
-      bcfData.push(topic.markup.topic);
-      bcfComments.push(topic.markup);
+        file.async("blob").then((blob) => {
+          const img = new Image();
+          img.src = URL.createObjectURL(blob);
 
+          bcfData.push({
+            [relativePath]: img.src,
+          });
+          // document.body.prepend(img);
+        });
+      };
+      if (!relativePath.endsWith('.png') && !relativePath.endsWith('/')) {
+        const Markup = parser.parse(content, xmlParserOptions);
+        // data.push({
+        //   [relativePath]: Markup,
+        // });
+        data[splitSTR[0]] = Markup;
+
+        // data =  {...data,[relativePath]: Markup };
+
+        // let obj = Object.assign(obj2, { [relativePath]: Markup });
+        bcfData.push({
+          [relativePath]: Markup,
+        });
+
+        if (splitSTR[1] === "markup.bcf") {
+          // console.log(Markup);
+          // console.log(typeof Markup)
+          // Markup.Topic.forEach((Topic) => {
+          bcfMarkup.push(Markup.Markup);
+          // });
+
+          // Object.keys(Markup).forEach(key => {
+          // console.log( Markup[key]);
+          // });  
+        };
+        bcfctx.onaddBCF(bcfData, bcfMarkup);
+      };
 
     });
-    props.onAddBCF(bcfData, bcfComments);
 
+    return data;
   };
 
 
   async function readBCF(target) {
-    getBCF(target);
-    // extractZip(target);
+    await getBCF(target);
+
+    // console.log(data);
+    // console.log(data['0a8fa0ff-fc81-4bb2-9600-fde88d5a9cde']);
+    // Object.keys(bcfimport).forEach(key => {
+    //   console.log(key, bcfimport[key]);
+    // });
+
     // props.onAddImg(bcfSnap);
-    props.onAddFile(target);
+    // bcfctx.onaddBCF(data, bcfMarkup);
   }
   return (
     <>
@@ -60,7 +111,7 @@ const Upload = (props) => {
         onChange={(e) => readBCF(e.target.files[0])}
       />
     </>
-  );
+  )
 };
 
 export default Upload;

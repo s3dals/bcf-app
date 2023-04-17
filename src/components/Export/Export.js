@@ -1,76 +1,62 @@
-import React, {useState , useEffect} from 'react';
+import React, { useContext } from 'react';
 import Button from '../UI/Button/Button';
-import classes from './Export.module.css';
-var _ = require('lodash');
+// import classes from './Export.module.css';
+import BCFcontext from '../../store/bcf-data';
+import { saveAs } from "file-saver";
 
+import JSZip from "jszip";
+import * as JSZipUtils from 'jszip-utils';
+
+var zip = new JSZip();
 const Parser = require("fast-xml-parser").j2xParser;
 
 const defaultOptions = {
-    attributeNamePrefix: "topic_",
+    attributeNamePrefix: "@_",
     // attrNodeName: "Topic", //default is false
     // textNodeName : "#text",
     ignoreAttributes: false,
-    // cdataTagName: "__cdatatst", //default is false
-    // cdataPositionChar: "\\c",
     format: true,
     indentBy: "  ",
     // suppressEmptyNode: false,
-    transformTagName: (tagName) => tagName.toUpperCase(),
-
+    // transformTagName: (tagName) => tagName.toUpperCase(),
     // tagNameProcessor: a=>a + "tessst",
     // tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),
     // tagValueProcessor: a=>he.charAt(0).toUpperCase() + he.slice(1),
-    rootNodeName: "Markup"
+    // rootNodeName: "Markup"
 };
 const parser = new Parser(defaultOptions);
 
-function changeKeysToUpper(obj) {
-    var key, upKey;
-    for (key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            upKey = key;
+async function exportZIP(data) {
 
-            if (!upKey.includes("topic_")) {
-                upKey = _.camelCase(key);
-                upKey = upKey.charAt(0).toUpperCase() + upKey.slice(1);
-
-            } else {
-                upKey = upKey.charAt(0).toUpperCase() + upKey.slice(1);
-            }
-
-            if (upKey !== key) {
-                obj[upKey] = obj[key];
-                delete (obj[key]);
-            }
-            // recurse
-            if (typeof obj[upKey] === "object") {
-                changeKeysToUpper(obj[upKey]);
-            }
+    await data.forEach((bcf) => {
+        if (!Object.keys(bcf)[0].endsWith('.png')) {
+            zip.file(Object.keys(bcf)[0], parser.parse(bcf[Object.keys(bcf)[0]]));
+        } else {
+            JSZipUtils.getBinaryContent(bcf[Object.keys(bcf)[0]], function (err, data) {
+                zip.file(Object.keys(bcf)[0], data, { binary: true });
+            })
         }
     }
-    return obj;
-}
+        // console.log(parser.parse(Object.keys(bcf)[0]))
+        // console.log(bcf[Object.keys(bcf)[0]])
+    );
+    setTimeout(function () {
+        zip.generateAsync({ type: "blob" }).then(function (blob) {
+            saveAs(blob, "bcf-export.bcf");
+        });
+    }, 1500);
+
+
+};
 const Export = (props) => {
-    const [exportData, setExportData] = useState([]);
+    const bcfctx = useContext(BCFcontext);
 
-    const data =props.data;
-    const convertData = [...data];
-
-    useEffect(() => {
-        setExportData(convertData);
-    }, []);
-
-    
     const exportXSML = () => {
-        setExportData(convertData);
-        console.log(props.comments);
-
-        // var convertData = [...props.data];
-
-        // changeKeysToUpper(exportData)
-        const xml = parser.parse(props.comments);
-        console.log(xml);
+        const exportData = bcfctx.bcfData
+        // console.log(exportData);
+        exportZIP(exportData);
     };
+
     return (
         <Button onClick={exportXSML} >Export</Button>
     );

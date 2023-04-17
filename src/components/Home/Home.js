@@ -1,78 +1,63 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 
 import Table from "../UI/Table/Table";
 import Modal from "../UI/Modal/Modal";
 import Upload from "../Upload/Upload";
 import Details from "../Details/Details";
 import Export from "../Export/Export";
-import classes from "./Home.module.css";
+// import classes from "./Home.module.css";
+
+import BCFcontext from '../../store/bcf-data';
+
 
 const Home = (props) => {
-  const [bcfProject, setbcfProject] = useState("");
-  
-  const [bcfInfo, setbcfInfo] = useState([]);
-  const [bcfComments, sebcfComments] = useState([]);
-  const [bcfTopics, setbcfTopics] = useState([]);
+
+  const [bcfComments, setbcfComments] = useState([]);
+  const [bcfImage, setbcfImage] = useState("");
 
   const [showDetails, setshowDetails] = useState(false);
   const [bcfDetails, setbcfDetails] = useState("");
-  const [filePath, setfilePath] = useState("");
 
+  const bcfctx = useContext(BCFcontext);
 
-  const addBCFHandler = (bcfData, bcfComme) => {
-    setbcfInfo(bcfData);
-    setbcfTopics(bcfComme);
-  };
-
-  const addProjectHandler = (bcfTitle) => {
-    setbcfProject(bcfTitle);
-  };
-
-  const addFilePath = (path) => {
-    setfilePath(path);
-  };
-
-  useEffect(() => {
-  
-  }, [bcfProject, bcfInfo, bcfComments]);
 
   const columns = React.useMemo(
     () => [
       {
-        Header: "title",
-        accessor: "title",
+        Header: "Title",
+        accessor: "Topic.Title",
       },
       {
-        Header: "priority",
-        accessor: "priority",
+        Header: "Priority",
+        accessor: "Topic.Priority",
       },
       {
-        Header: "topic_Topicstatus",
-        accessor: "topic_Topicstatus",
+        Header: "Topicstatus",
+        accessor: "Topic.@_TopicStatus",
       },
       {
-        Header: "creation_date",
-        accessor: "creation_date",
+        Header: "CreationDate",
+        accessor: "Topic.CreationDate",
       },
       {
-        Header: "creation_author",
-        accessor: "creation_author",
+        Header: "CreationAuthor",
+        accessor: "Topic.CreationAuthor",
       },
       {
-        Header: "modified_date",
-        accessor: "modified_date",
+        Header: "ModifiedDate",
+        accessor: "Topic.ModifiedDate",
       },
       {
-        Header: "assigned_to",
-        accessor: "assigned_to",
+        Header: "AssignedTo",
+        accessor: "Topic.AssignedTo",
       },
       {
-        Header: "due_date",
-        accessor: "due_date",
+        Header: "DueDate",
+        accessor: "Topic.DueDate",
       },
       {
-        Header: "description",
-        accessor: "description",
+        Header: "Description",
+        accessor: "Topic.Description",
       },
     ],
     []
@@ -86,19 +71,23 @@ const Home = (props) => {
     return {
       onClick: () => {
         setshowDetails(true);
-        var guid2 = state.original.topic_guid;
 
-        function checkGuid(top) {
-          if (top.topic.topic_guid === guid2) {
-            return top;
-          }
+        var guid = state.original.Topic["@_Guid"];
+
+        var topicComments = [];
+        if (state.original.Comment && !state.original.Comment.length) {
+          topicComments.push(state.original.Comment);
+        } else {
+          topicComments = state.original.Comment;
         }
-      
-        var topicComments= bcfTopics.filter(checkGuid);
-        topicComments = topicComments[0].comments;
-
-        sebcfComments(topicComments);
-        setbcfDetails(guid2);
+  
+        let imgKey = Object.keys(bcfctx.bcfData).find(key => Object.keys(bcfctx.bcfData[key])[0] === guid + "/snapshot.png");
+        if (imgKey){
+          let img = bcfctx.bcfData[imgKey][guid + "/snapshot.png"];
+          setbcfImage(img);
+        }
+        setbcfComments(topicComments);
+        setbcfDetails(guid);
       },
     };
   };
@@ -107,23 +96,24 @@ const Home = (props) => {
     <>
       {showDetails && (
         <Modal onClose={hideModalHandler}>
-          <Details guid={bcfDetails} comments={bcfComments} file={filePath} />
+          <Details guid={bcfDetails} comments={bcfComments} photo={bcfImage} />
         </Modal>
       )}
 
-      {bcfInfo.length === 0 && (
-      <h1>
-        Select your BCF file:
-        <Upload onAddProject={addProjectHandler} onAddBCF={addBCFHandler} onAddFile={addFilePath} />
-      </h1>
+      {bcfctx.bcfData.length === 0 && (
+        <h1>
+          Select your BCF file:
+          <Upload />
+        </h1>
       )}
       {/* <Card className={classes.home}> */}
       {/* <h1>Project name: {bcfProject}</h1> */}
-      <Export data={bcfInfo} comments={bcfTopics} />
-      {bcfInfo.length !== 0 && (
+      <Export data={bcfctx.bcfData} />
+      {bcfctx.bcfMarkup.length !== 0 && (
+        // console.log(bcfctx.bcfMarkup),
         <Table
           columns={columns}
-          data={bcfInfo}
+          data={bcfctx.bcfMarkup}
           formatRowProps={(state) => formatTrProps(state)}
         />
       )}
