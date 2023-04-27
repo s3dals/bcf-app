@@ -1,22 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-// import Login from './components/Login/Login';
-import Home from './components/Home/Home';
-import MainHeader from './components/MainHeader/MainHeader';
-import {BCFContextProvider} from './store/bcf-data';
+import RootLayout from './pages/Root';
+import Read from './pages/Read';
+import Home from './pages/Home';
+import Edit from './pages/Edit';
+
+import ErrorPage from './pages/Error'
+
+import { BCFContextProvider } from './store/bcf-data';
+
+const router = createBrowserRouter([
+  {
+    path: '', element: <RootLayout />, errorElement: <ErrorPage/>,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'read', element: <Read /> },
+      { path: 'edit', element: <Edit /> },
+    ]
+  },
+
+]);
 
 function App() {
-
+  // return <RouterProvider router={router} />;
 
   return (
 
-      <BCFContextProvider>
-      <MainHeader  />
-      <main>
-        {/* {!isLoggedIn && <Login onLogin={loginHandler} />} */}
-        <Home  />
-      </main>
-      </BCFContextProvider>
+    <BCFContextProvider>
+      <RouterProvider router={router} />
+      {/* <MainHeader /> */}
+      {/* <main> */}
+      {/* {!isLoggedIn && <Login onLogin={loginHandler} />} */}
+      {/* <Home /> */}
+      {/* </main> */}
+    </BCFContextProvider>
 
   );
 }

@@ -3,9 +3,9 @@ import classes from "./Details.module.css";
 const Details = (props, id) => {
 
   return (
-    <header className={classes.details}>
+    <div className={classes.details}>
       {props.photo && <img src={props.photo} alt="viewpoint" width={500} />}
-      <h2>Comments:</h2>
+      <h2 style={{textAlign: "center"}}>Comments:</h2>
       <hr />
       {props.comments && props.comments.length > 0 &&
         props.comments.map((post) => (
@@ -20,7 +20,7 @@ const Details = (props, id) => {
           </div>
         ))}
       {!props.comments && <h1>No comments!</h1>}
-    </header>
+    </div>
   );
 };
 

@@ -43,7 +43,7 @@ const Upload = (props) => {
       // }
 
       // console.log(relativePath);
-      if (splitSTR[1] === "snapshot.png") {
+      if (splitSTR[1] === "snapshot.png" || splitSTR[1] === "snapshot.jpeg" ) {
 
         file.async("blob").then((blob) => {
           const img = new Image();
@@ -55,7 +55,7 @@ const Upload = (props) => {
           // document.body.prepend(img);
         });
       };
-      if (!relativePath.endsWith('.png') && !relativePath.endsWith('/')) {
+      if (!relativePath.endsWith('.png') && !relativePath.endsWith('.jpeg') && !relativePath.endsWith('/')) {
         const Markup = parser.parse(content, xmlParserOptions);
         // data.push({
         //   [relativePath]: Markup,

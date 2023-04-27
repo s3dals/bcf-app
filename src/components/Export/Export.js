@@ -29,7 +29,7 @@ const parser = new Parser(defaultOptions);
 async function exportZIP(data) {
 
     await data.forEach((bcf) => {
-        if (!Object.keys(bcf)[0].endsWith('.png')) {
+        if (!Object.keys(bcf)[0].endsWith('.png') && !Object.keys(bcf)[0].endsWith('.jpeg')) {
             zip.file(Object.keys(bcf)[0], parser.parse(bcf[Object.keys(bcf)[0]]));
         } else {
             JSZipUtils.getBinaryContent(bcf[Object.keys(bcf)[0]], function (err, data) {

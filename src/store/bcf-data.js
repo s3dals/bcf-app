@@ -4,6 +4,7 @@ const bcfContext = React.createContext({
     bcfData: [],
     bcfMarkup: [],
     onaddBCF: (bcfData, bcfComme) => {},
+    onaddMarkup: (bcfData, bcfComme) => {},
 });
 
 export const BCFContextProvider = (props) => {
@@ -15,11 +16,14 @@ export const BCFContextProvider = (props) => {
 
     }, [ bcfInfo, bcfTopics]);
   
-    const addBCFHandler = (bcfData, bcfComme) => {
+    const addBCFHandler = (bcfData, bcfMarkup) => {
         setbcfInfo(bcfData);
-        setbcfTopics(bcfComme);
+        setbcfTopics(bcfMarkup);
     };
 
+    const addMarkuphandler = (bcfMarkup) => {
+        setbcfTopics(bcfMarkup);
+    };
 
     return (
     <bcfContext.Provider
@@ -27,6 +31,7 @@ export const BCFContextProvider = (props) => {
         bcfData: bcfInfo,
         bcfMarkup: bcfTopics,
         onaddBCF: addBCFHandler,
+        onaddMarkup: addMarkuphandler,
     }}>
         {props.children}
     </bcfContext.Provider>
