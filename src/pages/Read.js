@@ -1,11 +1,11 @@
 import React from "react";
-import Home from '../components/Home/Home';
+import Open from '../components/Open/Open';
 
 
 function Read() {
     return (
         <>
-            <Home />
+            <Open />
         </>
     );
 }

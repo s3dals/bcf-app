@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 
 import Table from "../UI/Table/Table";
 import Modal from "../UI/Modal/Modal";
@@ -7,13 +7,12 @@ import Details from "../Details/Details";
 import Export from "../Export/Export";
 // import classes from "./Home.module.css";
 
-import BCFcontext from '../../store/bcf-data';
+import BCFcontext from "../../store/bcf-data";
 // const homeMarkup = [];
 
 const Home = (props) => {
-  // const [bcfMarkups, setbcfMarkups] = useState([]);
   const [bcfComments, setbcfComments] = useState([]);
-  const [bcfImage, setbcfImage] = useState("");
+  const [bcfImage, setbcfImage] = useState();
 
   const [showDetails, setshowDetails] = useState(false);
   const [bcfDetails, setbcfDetails] = useState("");
@@ -61,21 +60,6 @@ const Home = (props) => {
     ],
     []
   );
-  // useEffect(() => {
-  //   bcfctx.bcfData.forEach((bcf) => {
-
-  //     if (Object.keys(bcf)[0].endsWith('.bcf')) {
-  //       homeMarkup.push(bcf[Object.keys(bcf)[0]].Markup);
-  //     }
-  //   }
-  //     // console.log(parser.parse(Object.keys(bcf)[0]))
-  //     // console.log(bcf[Object.keys(bcf)[0]])
-  //   );
-  //   // setbcfMarkups(homeMarkup);
-  //   console.log(bcfMarkups);
-  //   // bcfctx.onaddMarkup(homeMarkup)
-
-  // }, [bcfctx.bcfData]);
 
   function hideModalHandler() {
     setshowDetails(false);
@@ -95,10 +79,27 @@ const Home = (props) => {
           topicComments = state.original.Comment;
         }
 
-        let imgKey = Object.keys(bcfctx.bcfData).find(key => Object.keys(bcfctx.bcfData[key])[0] === guid + "/snapshot.png");
+        function checkImg(data) {
+          return data.endsWith(".png") || data.endsWith(".jpeg");
+        }
+
+        let imgKey = Object.keys(bcfctx.bcfData).filter(
+          (key) =>
+            Object.keys(bcfctx.bcfData[key])[0].split("/")[0] === guid &&
+            checkImg(Object.keys(bcfctx.bcfData[key])[0])
+        );
+
         if (imgKey) {
-          let img = bcfctx.bcfData[imgKey][guid + "/snapshot.png"];
-          setbcfImage(img);
+          let i = 0;
+          const imgs = [];
+          while (i < imgKey.length) {
+            imgs.push(bcfctx.bcfData[imgKey[i]][Object.keys(bcfctx.bcfData[imgKey[i]])]);
+            i++;
+        }
+          // let img = bcfctx.bcfData[imgKey][Object.keys(bcfctx.bcfData[imgKey])];
+          setbcfImage(imgs);
+        } else {
+          setbcfImage();
         }
         setbcfComments(topicComments);
         setbcfDetails(guid);

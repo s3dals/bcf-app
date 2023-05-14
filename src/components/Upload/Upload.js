@@ -43,7 +43,7 @@ const Upload = (props) => {
       // }
 
       // console.log(relativePath);
-      if (splitSTR[1] === "snapshot.png" || splitSTR[1] === "snapshot.jpeg" ) {
+      if (relativePath.endsWith('.png') || relativePath.endsWith('.jpeg') ) {
 
         file.async("blob").then((blob) => {
           const img = new Image();
