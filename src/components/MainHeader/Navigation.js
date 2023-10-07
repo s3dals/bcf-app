@@ -7,24 +7,30 @@ const Navigation = (props) => {
     <nav className={classes.nav}>
       <ul>
         <li>
-          <NavLink to="read"
+          <NavLink
+            to="read"
             className={({ isActive }) =>
               isActive ? classes.active : undefined
             }
-          >Read</NavLink>
+          >
+            Read
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="check"
+            className={({ isActive }) =>
+              isActive ? classes.active : undefined
+            }
+          >
+          Check
+          </NavLink>
         </li>
         <li>
           <NavLink to="/edit">Edit</NavLink>
         </li>
         <li>
-          <NavLink to="/"
-            className={({ isActive }) =>
-              isActive ? classes.active : undefined
-            }
-          >Check</NavLink>
-        </li>
-        <li>
-          <button >Logout</button>
+          <button>Logout</button>
         </li>
       </ul>
     </nav>

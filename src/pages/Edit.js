@@ -1,10 +1,10 @@
 import React from "react";
-
+import Edit2 from '../components/Edit/Edit';
 
 function Edit() {
     return (
         <>
-            <h1>Edit Page</h1>
+            <Edit2 />
         </>
     );
 }

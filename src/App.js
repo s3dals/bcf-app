@@ -5,6 +5,7 @@ import RootLayout from './pages/Root';
 import Read from './pages/Read';
 import Home from './pages/Home';
 import Edit from './pages/Edit';
+import Check from './pages/Check';
 
 import ErrorPage from './pages/Error'
 
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: 'read', element: <Read /> },
+      { path: 'check', element: <Check /> },
       { path: 'edit', element: <Edit /> },
     ]
   },

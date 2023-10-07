@@ -48,7 +48,7 @@ async function exportZIP(data) {
 
 
 };
-const Export = (props) => {
+const Export = () => {
     const bcfctx = useContext(BCFcontext);
 
     const exportXSML = () => {

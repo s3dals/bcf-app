@@ -1,10 +1,11 @@
-import React, { useState, useContext } from "react";
+// import React, { useState, useContext } from "react";
+import React from "react";
 
 import classes from "./Details.module.css";
-import BCFcontext from "../../store/bcf-data";
+// import BCFcontext from "../../store/bcf-data";
 
 const Details = (props, id) => {
-  const bcfctx = useContext(BCFcontext);
+  // const bcfctx = useContext(BCFcontext);
 
   // let imgKey = Object.keys(bcfctx.bcfData).find(key => Object.keys(bcfctx.bcfData[key])[0] === guid + "/snapshot.png")
 

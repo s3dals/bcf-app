@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 
-import Table from "../UI/Table/Table";
+import Table from "../UI/Table-edit/Table-edit";
 import Modal from "../UI/Modal/Modal";
 import Upload from "../Upload/Upload";
 import Details from "../Details/Details";
@@ -69,7 +69,7 @@ const Home = (props) => {
     //
     return {
       onClick: () => {
-        setshowDetails(true);
+        // setshowDetails(true);
 
         var guid = state.original.Topic["@_Guid"];
 
@@ -109,6 +109,8 @@ const Home = (props) => {
       },
     };
   };
+
+ 
 
   return (
     <>

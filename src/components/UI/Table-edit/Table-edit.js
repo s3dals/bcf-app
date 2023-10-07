@@ -25,11 +25,48 @@ const Styles = styled.div`
       :last-child {
         border-right: 0;
       }
+      input {
+        font-size: 1rem;
+        padding: 0;
+        margin: 0;
+        border: 0;
+      }
     }
   }
 `
 
-function Table({ columns, data, formatRowProps }) {
+// Create an editable cell renderer
+const EditableCell = ({
+  value: initialValue,
+  row: { index },
+  column: { id },
+  updateMyData, // This is a custom function that we supplied to our table instance
+}) => {
+  // We need to keep and update the state of the cell normally
+  const [value, setValue] = React.useState(initialValue)
+
+  const onChange = e => {
+    setValue(e.target.value)
+  }
+
+  // We'll only update the external data when the input is blurred
+  const onBlur = () => {
+    updateMyData(index, id, value)
+  }
+
+  // If the initialValue is changed external, sync it up with our state
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  return <input value={value} onChange={onChange} onBlur={onBlur} />
+}
+
+// Set our editable cell renderer as the default Cell renderer
+const defaultColumn = {
+  Cell: EditableCell,
+}
+function Table({ columns, data, formatRowProps, updateMyData, skipPageReset }) {
 
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -37,9 +74,20 @@ function Table({ columns, data, formatRowProps }) {
       {
         columns,
         data,
+        defaultColumn,
+        // use the skipPageReset option to disable page resetting temporarily
+        autoResetPage: !skipPageReset,
+        // updateMyData isn't part of the API, but
+        // anything we put into these options will
+        // automatically be available on the instance.
+        // That way we can call this function from our
+        // cell renderer!
+        updateMyData,
       },
       useSortBy
     );
+
+
 
   // We don't want to render all 2000 rows for this example, so cap
   // it at 20 for this use case

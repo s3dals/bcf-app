@@ -5,8 +5,7 @@ import parser from "fast-xml-parser";
 
 import classes from "./Upload.module.css";
 
-import BCFcontext from '../../store/bcf-data';
-
+import BCFcontext from "../../store/bcf-data";
 
 const xmlParserOptions = {
   ignoreAttributes: false,
@@ -24,12 +23,10 @@ var data = [];
 var bcfData = [];
 var bcfMarkup = [];
 const Upload = (props) => {
-
   const bcfctx = useContext(BCFcontext);
   const zip = new JSZip();
 
   const getBCF = async (file) => {
-
     const extractedFiles = await zip.loadAsync(file);
 
     extractedFiles.forEach(async (relativePath, file) => {
@@ -43,8 +40,7 @@ const Upload = (props) => {
       // }
 
       // console.log(relativePath);
-      if (relativePath.endsWith('.png') || relativePath.endsWith('.jpeg') ) {
-
+      if (relativePath.endsWith(".png") || relativePath.endsWith(".jpeg")) {
         file.async("blob").then((blob) => {
           const img = new Image();
           img.src = URL.createObjectURL(blob);
@@ -54,8 +50,12 @@ const Upload = (props) => {
           });
           // document.body.prepend(img);
         });
-      };
-      if (!relativePath.endsWith('.png') && !relativePath.endsWith('.jpeg') && !relativePath.endsWith('/')) {
+      }
+      if (
+        !relativePath.endsWith(".png") &&
+        !relativePath.endsWith(".jpeg") &&
+        !relativePath.endsWith("/")
+      ) {
         const Markup = parser.parse(content, xmlParserOptions);
         // data.push({
         //   [relativePath]: Markup,
@@ -78,21 +78,22 @@ const Upload = (props) => {
 
           // Object.keys(Markup).forEach(key => {
           // console.log( Markup[key]);
-          // });  
-        };
+          // });
+        }
         bcfctx.onaddBCF(bcfData, bcfMarkup);
-      };
 
+      }
     });
 
-    return data;
+    return bcfData;
   };
 
-
   async function readBCF(target) {
-    await getBCF(target);
+    data = await  getBCF(target);
+    
+    bcfData.length = 0;
+    bcfMarkup.length = 0;
 
-    // console.log(data);
     // console.log(data['0a8fa0ff-fc81-4bb2-9600-fde88d5a9cde']);
     // Object.keys(bcfimport).forEach(key => {
     //   console.log(key, bcfimport[key]);
@@ -111,7 +112,7 @@ const Upload = (props) => {
         onChange={(e) => readBCF(e.target.files[0])}
       />
     </>
-  )
+  );
 };
 
 export default Upload;
