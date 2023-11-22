@@ -4,12 +4,15 @@ import Table from "../UI/Table-edit/Table-edit";
 import Modal from "../UI/Modal/Modal";
 import Upload from "../Upload/Upload";
 import Details from "../Details/Details";
+import BatchEdit from "../BatchEdit/BatchEdit";
 
 import OpenOptions from "../OpenOptions/OpenOptions";
 // import classes from "./Home.module.css";
 
 import BCFcontext from "../../store/bcf-data";
 // const homeMarkup = [];
+
+import Button from "../UI/Button/Button";
 
 const Home = (props) => {
   const [bcfComments, setbcfComments] = useState([]);
@@ -22,6 +25,7 @@ const Home = (props) => {
 
   const columns = React.useMemo(
     () => [
+
       {
         Header: "Title",
         accessor: "Topic.Title",
@@ -116,7 +120,7 @@ const Home = (props) => {
     <>
       {showDetails && (
         <Modal onClose={hideModalHandler}>
-          <Details guid={bcfDetails} comments={bcfComments} photo={bcfImage} />
+          <BatchEdit guid={bcfDetails} comments={bcfComments} photo={bcfImage} />
         </Modal>
       )}
 
@@ -132,6 +136,7 @@ const Home = (props) => {
       {bcfctx.bcfMarkup.length !== 0 && (
         //console.log(bcfctx.bcfData),
         <>
+        <Button onClick={setshowDetails}>Batch Edit</Button>
           <Table
             columns={columns}
             data={bcfctx.bcfMarkup}
