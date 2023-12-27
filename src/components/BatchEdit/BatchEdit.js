@@ -1,45 +1,80 @@
 // import React, { useState, useContext } from "react";
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 import classes from "./BatchEdit.module.css";
+import Button from "../UI/Button/Button";
+import Input from "../UI/Input/Input";
 // import BCFcontext from "../../store/bcf-data";
 
-const BatchEdit = (props, id) => {
-  // const bcfctx = useContext(BCFcontext);
+const BatchEdit = (props) => {
+  let editedbcfTopics = [];
+  const bcfMarkup = useSelector((state) => state.markups.bcfMarkup);
+  const bcfTopics = useSelector((state) => state.topics.bcfData);
 
-  // let imgKey = Object.keys(bcfctx.bcfData).find(key => Object.keys(bcfctx.bcfData[key])[0] === guid + "/snapshot.png")
+  const [enteredTitle, setEnteredTitle] = useState("");
 
-  // if (imgKey) {
-  //   let img = bcfctx.bcfData[imgKey][guid + "/snapshot.png"];
-  //   // setbcfImage(img);
-  // }
+  function authorChangeHandler(event) {
+    setEnteredTitle(event.target.value);
+    // console.log(event.target.value);
+  }
+
+  function submitHandler(event) {
+    event.preventDefault();
+    // console.log(bcfTopics);
+    // console.log(enteredTitle);
+
+    let topicsKeys = Object.keys(bcfTopics).filter(
+      (key) => Object.keys(bcfTopics[key])[0]?.split("/")[1] === "markup.bcf"
+    );
+    console.log(topicsKeys.includes("4"));
+    // const mapKeys = Key.map(item => {
+    //  return bcfTopics[Key[item]][Object.keys(bcfTopics[Key[item]])].Markup.Topic.Title
+    // })
+
+    // const mapKeys = Object.keys(topicsKeys).forEach(function(key, index) {
+    //   return topicsKeys[key] ;
+    // });
+    editedbcfTopics = [];
+    for (var key1 in bcfTopics) {
+      let check = topicsKeys.includes(key1);
+      // if (check) {
+        editedbcfTopics.push(bcfTopics[key1]);
+      // }
+    }
+
+    for (var key in topicsKeys) {
+      if (topicsKeys.hasOwnProperty(key)) {
+        // console.log(topicsKeys[key] );
+
+        let vorTitle =
+          editedbcfTopics[topicsKeys[key]][
+            Object.keys(editedbcfTopics[topicsKeys[key]])
+          ].Markup.Topic.Title;
+        let endTitle = enteredTitle + " " + vorTitle;
+        // editedbcfTopics[topicsKeys[key]][Object.keys(editedbcfTopics[topicsKeys[key]])].Markup.Topic.Title = endTitle;
+
+        console.log(editedbcfTopics);
+      }
+    }
+  }
 
   return (
     <div className={classes.details}>
       <h2 style={{ textAlign: "center" }}>Batch Edit</h2>
       <hr />
-
-      {
-        
-        props.comments.map((post) => (
-          <div key={post["@_Guid"]}>
-            <li>Comment12: {post.Comment} </li>
-            <li>Author: {post.Author} </li>
-            <li>Date: {post.Date} </li>
-            <li>modified author: {post.ModifiedAuthor} </li>
-            <li>modified date: {post.ModifiedDate} </li>
-            <li>
-              viewpoint:{" "}
-              {post.Viewpoint &&
-                post.Viewpoint["@_Guid"] &&
-                post.Viewpoint["@_Guid"]}
-              {/* props.guid + "/Snapshot_" +post.Viewpoint["@_Guid"] + ".png" */}
-            </li>
-
-            <hr />
-          </div>
-        ))}
-      {!props.comments && <h1>No comments!</h1>}
+      <div>{props.guid}</div>
+      <form onSubmit={submitHandler}>
+        <label>
+          Title Prefix: &nbsp;
+          <Input type="text" id="title" onChange={authorChangeHandler}>
+            submit
+          </Input>
+        </label>
+        <br />
+        <br />
+        <Button onClick={submitHandler}>submit</Button>
+      </form>
     </div>
   );
 };

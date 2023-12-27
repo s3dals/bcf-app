@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Button from '../UI/Button/Button';
-// import classes from './Export.module.css';
-import BCFcontext from '../../store/bcf-data';
+
+import { useSelector } from "react-redux";
+
 import { saveAs } from "file-saver";
 
 import JSZip from "jszip";
@@ -49,10 +50,10 @@ async function exportZIP(data) {
 
 };
 const Export = () => {
-    const bcfctx = useContext(BCFcontext);
+    const bcfTopics = useSelector((state) => state.topics.bcfData);
 
     const exportXSML = () => {
-        const exportData = bcfctx.bcfData
+        const exportData = bcfTopics
         // console.log(exportData);
         exportZIP(exportData);
     };

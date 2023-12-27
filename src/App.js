@@ -9,7 +9,7 @@ import Check from './pages/Check';
 
 import ErrorPage from './pages/Error'
 
-import { BCFContextProvider } from './store/bcf-data';
+// import { BCFContextProvider } from './store/bcf-data';
 
 const router = createBrowserRouter([
   {
@@ -29,14 +29,14 @@ function App() {
 
   return (
 
-    <BCFContextProvider>
+    <>
       <RouterProvider router={router} />
       {/* <MainHeader /> */}
       {/* <main> */}
       {/* {!isLoggedIn && <Login onLogin={loginHandler} />} */}
       {/* <Home /> */}
       {/* </main> */}
-    </BCFContextProvider>
+     </>
 
   );
 }

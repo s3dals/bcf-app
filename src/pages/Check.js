@@ -1,15 +1,18 @@
-import React, {useContext} from "react";
+import React from "react";
 
 import BCfInfo from "../components/BCFInfo/BCFInfo";
 import Open from "../components/Open/Open";
 
-import BCFcontext from "../store/bcf-data";
+import { useSelector } from "react-redux";
+
+
 function Check() {
-  const bcfctx = useContext(BCFcontext);
+  const bcfMarkup = useSelector((state) => state.markups.bcfMarkup);
+
   return (
     <>
       <h1>Check Page</h1>
-      {bcfctx.bcfMarkup.length !== 0 && <BCfInfo />} 
+      {bcfMarkup.length !== 0 && <BCfInfo />} 
 
       <Open />
     </>

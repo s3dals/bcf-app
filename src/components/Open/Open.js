@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 import Table from "../UI/Table/Table";
 import Modal from "../UI/Modal/Modal";
@@ -8,7 +9,6 @@ import Details from "../Details/Details";
 import OpenOptions from "../OpenOptions/OpenOptions";
 // import classes from "./Home.module.css";
 
-import BCFcontext from "../../store/bcf-data";
 // const homeMarkup = [];
 
 const Home = (props) => {
@@ -18,7 +18,9 @@ const Home = (props) => {
   const [showDetails, setshowDetails] = useState(false);
   const [bcfDetails, setbcfDetails] = useState("");
 
-  const bcfctx = useContext(BCFcontext);
+
+  const bcfMarkup = useSelector((state) => state.markups.bcfMarkup);
+  const bcfTopics = useSelector((state) => state.topics.bcfData);
 
   const columns = React.useMemo(
     () => [
@@ -70,24 +72,27 @@ const Home = (props) => {
     return {
       onClick: () => {
         setshowDetails(true);
-
+        
         var guid = state.original.Topic["@_Guid"];
 
         var topicComments = [];
         if (state.original.Comment && !state.original.Comment.length) {
           topicComments.push(state.original.Comment);
+          
         } else {
           topicComments = state.original.Comment;
         }
-
+        
         function checkImg(data) {
           return data.endsWith(".png") || data.endsWith(".jpeg");
         }
 
-        let imgKey = Object.keys(bcfctx.bcfData).filter(
+        
+
+        let imgKey =  Object.keys(bcfTopics).filter(
           (key) =>
-            Object.keys(bcfctx.bcfData[key])[0]?.split("/")[0] === guid &&
-            checkImg(Object.keys(bcfctx.bcfData[key])[0])
+            Object.keys(bcfTopics[key])[0]?.split("/")[0] === guid &&
+            checkImg(Object.keys(bcfTopics[key])[0])
         );
 
         if (imgKey) {
@@ -95,7 +100,7 @@ const Home = (props) => {
           const imgs = [];
           while (i < imgKey.length) {
             imgs.push(
-              bcfctx.bcfData[imgKey[i]][Object.keys(bcfctx.bcfData[imgKey[i]])]
+              bcfTopics[imgKey[i]][Object.keys(bcfTopics[imgKey[i]])]
             );
             i++;
           }
@@ -104,12 +109,14 @@ const Home = (props) => {
         } else {
           setbcfImage();
         }
+
         setbcfComments(topicComments);
         setbcfDetails(guid);
       },
     };
   };
 
+  // bcfMarkup.map(home => console.log( home ) )
   return (
     <>
       {showDetails && (
@@ -118,21 +125,22 @@ const Home = (props) => {
         </Modal>
       )}
 
-      {bcfctx.bcfData.length === 0 && (
+      {bcfMarkup.length === 0 && (
         <h2>
           Select your BCF file:
           <Upload />
         </h2>
       )}
+
       {/* <Card className={classes.home}> */}
       {/* <h1>Project name: {bcfProject}</h1> */}
-      {bcfctx.bcfMarkup.length !== 0 && <OpenOptions />}
-      {bcfctx.bcfMarkup.length !== 0 && (
-        //console.log(bcfctx.bcfData),
+      {bcfMarkup.length !== 0 && <OpenOptions />}
+      {bcfMarkup.length !== 0 && (
+
         <>
           <Table
             columns={columns}
-            data={bcfctx.bcfMarkup}
+            data={bcfMarkup}
             formatRowProps={(state) => formatTrProps(state)}
           />
         </>

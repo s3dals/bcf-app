@@ -1,11 +1,17 @@
 // import { BcfReader } from "@parametricos/bcf-js";
-import React, { useContext } from "react";
 import JSZip from "jszip";
 import parser from "fast-xml-parser";
 
+import React from "react";
+import {  useDispatch } from "react-redux";
+
+
+import { topicsActions } from "../../store/bcf-topics";
+import { markupsActions } from "../../store/bcf-markups";
+
 import classes from "./Upload.module.css";
 
-import BCFcontext from "../../store/bcf-data";
+// import BCFcontext from "../../store/bcf-data";
 
 const xmlParserOptions = {
   ignoreAttributes: false,
@@ -22,8 +28,16 @@ const xmlParserOptions = {
 var data = [];
 var bcfData = [];
 var bcfMarkup = [];
+
+
 const Upload = (props) => {
-  const bcfctx = useContext(BCFcontext);
+  
+  const dispatch = useDispatch();
+  
+
+  
+  // const bcfctx = useContext(BCFcontext);
+
   const zip = new JSZip();
 
   const getBCF = async (file) => {
@@ -48,9 +62,11 @@ const Upload = (props) => {
           bcfData.push({
             [relativePath]: img.src,
           });
+          dispatch(topicsActions.addbcfData({ [relativePath]: img.src}));
           // document.body.prepend(img);
         });
       }
+      
       if (
         !relativePath.endsWith(".png") &&
         !relativePath.endsWith(".jpeg") &&
@@ -69,19 +85,25 @@ const Upload = (props) => {
           [relativePath]: Markup,
         });
 
+        dispatch(topicsActions.addbcfData({ [relativePath]: Markup})); 
+
         if (splitSTR[1] === "markup.bcf") {
           // console.log(Markup);
           // console.log(typeof Markup)
           // Markup.Topic.forEach((Topic) => {
           bcfMarkup.push(Markup.Markup);
+          dispatch(markupsActions.addbcfMarkup(Markup.Markup));
           // });
 
           // Object.keys(Markup).forEach(key => {
           // console.log( Markup[key]);
           // });
         }
-        bcfctx.onaddBCF(bcfData, bcfMarkup);
-
+        // bcfctx.onaddBCF(bcfData, bcfMarkup);
+        // dispatch(topicsActions.addbcfData(bcfData));
+        
+        // dispatch(topicsActions.addbcfData(bcfData)); 
+        // dispatch(topicsActions.addbcfMarkup(bcfMarkup)); 
       }
     });
 
@@ -89,8 +111,11 @@ const Upload = (props) => {
   };
 
   async function readBCF(target) {
+    
     data = await  getBCF(target);
     
+    // dispatch(topicsActions.addbcfData({ test: "Markup"})); 
+
     bcfData.length = 0;
     bcfMarkup.length = 0;
 
@@ -102,6 +127,7 @@ const Upload = (props) => {
     // props.onAddImg(bcfSnap);
     // bcfctx.onaddBCF(data, bcfMarkup);
   }
+  
   return (
     <>
       <input
@@ -111,6 +137,8 @@ const Upload = (props) => {
         accept=".bcf"
         onChange={(e) => readBCF(e.target.files[0])}
       />
+      
+     
     </>
   );
 };

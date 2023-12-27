@@ -1,16 +1,22 @@
-import React, { useContext } from "react";
+import React from "react";
+import {  useDispatch } from "react-redux";
 
-import BCFcontext from "../../store/bcf-data";
+
+import { topicsActions } from "../../store/bcf-topics";
+import { markupsActions } from "../../store/bcf-markups";
+// import BCFcontext from "../../store/bcf-data";
 
 import Button from "../UI/Button/Button";
 
 const ClearData = () => {
-  const bcfctx = useContext(BCFcontext);
- 
+  // const bcfctx = useContext(BCFcontext);
+  const dispatch = useDispatch();
   const DeleteBCF = () => {
+    dispatch(topicsActions.clearbcfData());
+    dispatch(markupsActions.clearbcfMarkup());
     // const exportData = bcfctx.bcfData;
     // console.log(exportData);
-    bcfctx.onaddBCF([], []);
+    // bcfctx.onaddBCF([], []);
   };
 
   return <Button onClick={DeleteBCF}>Clear Data</Button>;

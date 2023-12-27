@@ -1,19 +1,29 @@
-import React, { useContext } from "react";
+import React, {useRef} from "react";
 
 import Export from "../Export/Export";
 import ClearData from "../ClearData/ClearData";
 // import Upload from "../Upload/Upload";
-import BCFcontext from "../../store/bcf-data";
 
 import Button from "../UI/Button/Button";
+
 const OpenOptions = (props) => {
-  const bcfctx = useContext(BCFcontext);
+  
+  const ref = useRef(null);
 
+  async function readBCF() {
+    ref.current.focus();
 
+  }
   return (
     <>
-
-      <Button>Insert BCF</Button>
+    <label onChange={readBCF()} htmlFor="formId">
+      <input  type="file"
+       name="upload"
+        id="formId"
+        accept=".bcf" hidden  />
+        <Button onClick={readBCF} >Insert BCF</Button> 
+        
+        </label>
       &nbsp;
       <Export />
       &nbsp;

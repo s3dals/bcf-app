@@ -1,39 +1,46 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
-import BCFcontext from "../../store/bcf-data";
 // import classes from './Button.module.css';
 
 const BCFInfo = (props) => {
-  const bcfctx = useContext(BCFcontext);
+
+  const bcfMarkup = useSelector((state) => state.markups.bcfMarkup);
+  const bcfTopics = useSelector((state) => state.topics.bcfData);
 
   const [projectName, setProjectName] = useState();
   const [projectID, setProjectID] = useState();
   const [BCFVersion, setBCFVersion] = useState();
 
-  let BCFVersionKEY = Object.keys(bcfctx.bcfData).filter(
-    (key) => Object.keys(bcfctx.bcfData[key])[0] === "bcf.version"
+  let BCFVersionKEY = Object.keys(bcfTopics).filter(
+    (key) => Object.keys(bcfTopics[key])[0] === "bcf.version"
   );
   const BCFVersionJS =
-    bcfctx.bcfData[BCFVersionKEY]["bcf.version"].Version["@_VersionId"];
+    bcfTopics[BCFVersionKEY]["bcf.version"].Version["@_VersionId"];
 
     let BCFProjectName = "";
     let BCFProjectID = "";
+    // console.log(Object.values(bcfTopics))
 
-  if ( "project.bcfp" in bcfctx.bcfData) {
-    let BCFProjectKEY = Object.keys(bcfctx.bcfData).filter(
-      (key) => Object.keys(bcfctx.bcfData[key])[0] === "project.bcfp"
+  // if ( "project.bcfp" in bcfTopics) {
+    
+    let BCFProjectKEY = Object.keys(bcfTopics).filter(
+      (key) => Object.keys(bcfTopics[key])[0] === "project.bcfp"
     );
-    // if (bcfctx.bcfData[BCFProjectKEY]["project.bcfp"] ) {
+    
+    console.log(bcfTopics)
+    if (BCFProjectKEY.length  !== 0) {
      BCFProjectName =
-      bcfctx.bcfData[BCFProjectKEY]["project.bcfp"].ProjectExtension.Project.Name;
-
+      bcfTopics[BCFProjectKEY]["project.bcfp"]?.ProjectExtension?.Project.Name;
+      
      BCFProjectID =
-      bcfctx.bcfData[BCFProjectKEY]["project.bcfp"].ProjectExtension.Project["@_ProjectId"];
+      bcfTopics[BCFProjectKEY]["project.bcfp"]?.ProjectExtension?.Project["@_ProjectId"];
 
-    // console.log(bcfctx.bcfData["project.bcfp"]);
-  } else {
-    BCFProjectName = "";
-    BCFProjectID = "";
+    // console.log(bcfTopics[BCFProjectKEY]["project.bcfp"]);
+  // } else {
+    
+  //   BCFProjectName = "";
+  //   BCFProjectID = "";
   };
 
   // DetailedVersion
@@ -46,17 +53,18 @@ const BCFInfo = (props) => {
     setProjectID(BCFProjectID);
   }, [BCFVersionJS, BCFProjectName, BCFProjectID]);
 
+  
   // console.log(
-  // bcfctx.bcfData[BCFProjectKEY]["project.bcfp"].ProjectExtension.Project["@_ProjectId"]
+  // bcfTopics[BCFProjectKEY]["project.bcfp"].ProjectExtension.Project["@_ProjectId"]
   // "test"
   // );
 
   return (
     <div>
-      <ul>BCF Version: {bcfctx.bcfMarkup.length !== "" && BCFVersion}</ul>
+      <ul>BCF Version: {bcfMarkup.length !== "" && BCFVersion}</ul>
 
-      <ul> Project Name: {bcfctx.bcfMarkup.length !== "" && projectName}</ul>
-      <ul> Project ID: {bcfctx.bcfMarkup.length !== "" && projectID}</ul>
+      <ul> Project Name: {bcfMarkup.length !== "" && projectName}</ul>
+      <ul> Project ID: {bcfMarkup.length !== "" && projectID}</ul>
     </div>
   );
 };
